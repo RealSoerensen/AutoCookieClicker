@@ -1,7 +1,7 @@
 import os
 from random import randint
 from time import sleep
-
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -15,6 +15,10 @@ parent_dir = os.path.dirname(__file__)
 path = os.path.join(parent_dir, directory)
 if not os.path.exists(path):
     os.makedirs(path)
+
+start_time = datetime.now()
+save_time = start_time.minute + 10
+upgrade_time = start_time.second + 10
 
 
 class CookieBot:
@@ -45,15 +49,21 @@ class CookieBot:
         CookieBot.cookie_click(self)
 
     def cookie_click(self):
+        global save_time, upgrade_time
         while True:
             self.driver.find_element(By.ID, "bigCookie").click()
 
-            if randint(0, 800) == 400:
-                CookieBot.autosave(self)
+            if save_time == datetime.now().minute:
+                self.autosave()
+                save_time = save_time + 10
+                if save_time > 60:
+                    save_time = save_time - 60
 
-            if randint(0, 100) < 5:
-                CookieBot.upgrade(self)
-                CookieBot.store(self)
+            if upgrade_time == datetime.now().second:
+                self.upgrade()
+                upgrade_time = upgrade_time + 10
+                if upgrade_time > 60:
+                    upgrade_time = upgrade_time - 60
 
     def store(self):
         for product_num in range(17, -1, -1):
@@ -84,7 +94,6 @@ class CookieBot:
             self.driver.find_element(By.ID, "promptOption0").click()
             self.driver.find_element(By.XPATH, "/html/body/div/div[2]/div[18]/div[2]/div[4]/div[1]").click()
             print("Saved")
-            sleep(300)
         except Exception:
             print("Failed to save")
             pass
