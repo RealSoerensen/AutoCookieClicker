@@ -16,10 +16,6 @@ path = os.path.join(parent_dir, directory)
 if not os.path.exists(path):
     os.makedirs(path)
 
-start_time = datetime.now()
-save_time = start_time.minute + 10
-upgrade_time = start_time.second + 10
-
 
 class CookieBot:
     def __init__(self):
@@ -48,22 +44,31 @@ class CookieBot:
 
         CookieBot.cookie_click(self)
 
-    def cookie_click(self):
-        global save_time, upgrade_time
+    def cookie_click(self):   
+        start_time = datetime.now()
+        save_time = start_time.minute + 10
+        upgrade_time = start_time.second + 10
+
+        if save_time >= 60:
+            save_time -= 60
+        if upgrade_time >= 60:
+            upgrade_time -= 60   
+
         while True:
             self.driver.find_element(By.ID, "bigCookie").click()
 
             if save_time == datetime.now().minute:
                 self.autosave()
-                save_time = save_time + 10
-                if save_time > 60:
-                    save_time = save_time - 60
+                save_time += 10
+                if save_time >= 60:
+                    save_time -= 60
 
             if upgrade_time == datetime.now().second:
                 self.upgrade()
-                upgrade_time = upgrade_time + 10
-                if upgrade_time > 60:
-                    upgrade_time = upgrade_time - 60
+                self.store()
+                upgrade_time += 10
+                if upgrade_time >= 60:
+                    upgrade_time -= 60
 
     def store(self):
         for product_num in range(17, -1, -1):
@@ -98,6 +103,7 @@ class CookieBot:
             print("Failed to save")
             pass
 
+if __name__ == "__main__":
+    bot = CookieBot()
+    bot.start()
 
-bot = CookieBot()
-bot.start()
