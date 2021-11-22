@@ -1,5 +1,4 @@
 import os
-from random import randint
 from time import sleep
 from datetime import datetime
 from selenium import webdriver
@@ -44,7 +43,7 @@ class CookieBot:
 
         CookieBot.cookie_click(self)
 
-    def cookie_click(self):   
+    def cookie_click(self):
         start_time = datetime.now()
         save_time = start_time.minute + 10
         upgrade_time = start_time.second + 10
@@ -52,7 +51,7 @@ class CookieBot:
         if save_time >= 60:
             save_time -= 60
         if upgrade_time >= 60:
-            upgrade_time -= 60   
+            upgrade_time -= 60
 
         while True:
             self.driver.find_element(By.ID, "bigCookie").click()
@@ -103,7 +102,7 @@ class CookieBot:
             print("Failed to save")
             pass
 
+
 if __name__ == "__main__":
     bot = CookieBot()
     bot.start()
-
